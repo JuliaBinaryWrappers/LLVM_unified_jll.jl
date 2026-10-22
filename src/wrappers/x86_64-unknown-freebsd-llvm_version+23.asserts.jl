@@ -6,15 +6,20 @@ using Zstd_jll
 using libLLVM_jll
 JLLWrappers.@generate_wrapper_header("LLVM_unified")
 JLLWrappers.@declare_library_product(liblto, "libLTO.so.23.1jl")
+JLLWrappers.@declare_executable_product(opt)
 JLLWrappers.@declare_executable_product(llc)
 JLLWrappers.@declare_executable_product(llvm_mca)
-JLLWrappers.@declare_executable_product(opt)
 function __init__()
     JLLWrappers.@generate_init_header(Zlib_jll, Zstd_jll, libLLVM_jll)
     JLLWrappers.@init_library_product(
         liblto,
         "lib/libLTO.so",
         RTLD_LAZY | RTLD_DEEPBIND,
+    )
+
+    JLLWrappers.@init_executable_product(
+        opt,
+        "tools/opt",
     )
 
     JLLWrappers.@init_executable_product(
@@ -25,11 +30,6 @@ function __init__()
     JLLWrappers.@init_executable_product(
         llvm_mca,
         "tools/llvm-mca",
-    )
-
-    JLLWrappers.@init_executable_product(
-        opt,
-        "tools/opt",
     )
 
     JLLWrappers.@generate_init_footer()
